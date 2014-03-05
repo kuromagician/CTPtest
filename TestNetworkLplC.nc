@@ -14,6 +14,8 @@
 #include "TestNetwork.h"
 #include "CtpDebugMsg.h"
 
+#define SINK_ID 1
+
 module TestNetworkLplC {
   uses interface Boot;
   uses interface SplitControl as RadioControl;
@@ -61,7 +63,7 @@ implementation {
     call SerialControl.start();
   }
   event void SerialControl.startDone(error_t err) {
-    if (TOS_NODE_ID % 500 == 1) {
+    if (TOS_NODE_ID % 500 == SINK_ID) {
       call LowPowerListening.setLocalWakeupInterval(0);
     }
     call RadioControl.start();
@@ -73,7 +75,7 @@ implementation {
     else {
       //call DisseminationControl.start();
       call RoutingControl.start();
-      if (TOS_NODE_ID % 500 == 1) {
+      if (TOS_NODE_ID % 500 == SINK_ID) {
 	call RootControl.setRoot();
       }
       seqno = 0;

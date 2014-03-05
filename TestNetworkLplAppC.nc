@@ -22,7 +22,7 @@ implementation {
   components new CollectionSenderC(CL_TEST);
   components new TimerMilliC();
   components new DemoSensorC();
-  components new SerialAMSenderC(AM_DUMMY);
+  components new SerialAMSenderC(AM_DUMMY) as dummysender;
   components SerialActiveMessageC;
 #ifndef NO_DEBUG
   components new SerialAMSenderC(AM_COLLECTION_DEBUG) as UARTSender;
@@ -44,7 +44,7 @@ implementation {
   TestNetworkLplC.ReadSensor -> DemoSensorC;
   TestNetworkLplC.RootControl -> Collector;
   TestNetworkLplC.Receive -> Collector.Receive[CL_TEST];
-  TestNetworkLplC.UARTSend -> SerialAMSenderC.AMSend;
+  TestNetworkLplC.UARTSend -> dummysender.AMSend;
   TestNetworkLplC.CollectionPacket -> Collector;
   TestNetworkLplC.CtpInfo -> Collector;
   TestNetworkLplC.CtpCongestion -> Collector;

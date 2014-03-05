@@ -9,11 +9,13 @@ CFLAGS += -DDELAY_AFTER_RECEIVE=20
 CFLAGS += -I.
 CFLAGS += -I../TestNetwork
 
+CTPDIR = $(TOSDIR)/lib/net/ctp
+
 CFLAGS += -I$(TOSDIR)/lib/net \
 		  -I$(TOSDIR)/lib/net \
           -I$(TOSDIR)/lib/net/drip \
           -I$(TOSDIR)/lib/net/4bitle \
-          -I$(TOSDIR)/lib/net/ctp -DNO_DEBUG
+          -I$(TOSDIR)/lib/net/ctp #-DNO_DEBUG
 
 TFLAGS += -I$(TOSDIR)/../apps/tests/TestDissemination \
           -I$(TOSDIR)/../support/sdk/c \
@@ -25,7 +27,7 @@ LIBMOTE = $(TOSDIR)/../support/sdk/c/libmote.a
 LISTEN_OBJS = collection_msg.o test_network_msg.o tn-listener.o $(LIBMOTE)
 INJECT_OBJS = set_rate_msg.o tn-injector.o collection_debug_msg.o $(LIBMOTE)
 
-BUILD_EXTRA_DEPS +=   dummy.class #TestNetworkMsg.class
+BUILD_EXTRA_DEPS +=   dummy.class Collection_Debug.class #TestNetworkMsg.class
 CLEAN_EXTRA = *.class *.java
 
 dummy.java: dummy.h
@@ -33,6 +35,12 @@ dummy.java: dummy.h
 
 dummy.class: dummy.java
 	javac -source 1.4 -target 1.4  dummy.java
+
+Collection_Debug.java: $(CTPDIR)/CtpDebugMsg.h
+	mig -target=telosb -I$(TOSDIR)/lib/net/ctp -java-classname=Collection_Debug java  Collection_Debug.h Collection_Debug -o $@
+
+Collection_Debug.class: Collection_Debug.java
+	javac -source 1.4 -target 1.4  Collection_Debug.java
 
 TestNetworkMsg.java: TestNetwork.h
 	mig -target=telosb -I$TOSDIR/lib/CC2420Radio  -java-classname=TestNetworkMsg java TestNetwork.h TestNetworkMsg -o $@
