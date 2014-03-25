@@ -31,6 +31,7 @@ implementation {
   components RandomC;
   components new QueueC(message_t*, 12);
   components new PoolC(message_t, 12);
+  //components BloomC;
 
   TestNetworkLplC.Boot -> MainC;
   TestNetworkLplC.RadioControl -> ActiveMessageC;
@@ -54,6 +55,8 @@ implementation {
   TestNetworkLplC.RadioPacket -> ActiveMessageC;
   TestNetworkLplC.LowPowerListening -> ActiveMessageC;
   
+  
+  //TestNetworkLplC.bloom -> BloomC;
 #ifndef NO_DEBUG
   components new PoolC(message_t, 10) as DebugMessagePool;
   components new QueueC(message_t*, 10) as DebugSendQueue;

@@ -13,6 +13,8 @@
 #include <Timer.h>
 #include "TestNetwork.h"
 #include "CtpDebugMsg.h"
+//#include "Bloom.h"
+#include "string.h"
 
 #define SINK_ID 1
 
@@ -40,6 +42,7 @@ module TestNetworkLplC {
   uses interface AMPacket;
   uses interface Packet as RadioPacket;
   uses interface LowPowerListening;
+  //uses interface bloom;
 }
 implementation {
   uint16_t sendCountLocal = 0;
@@ -54,7 +57,7 @@ implementation {
   bool firstTimer = TRUE;
   uint16_t seqno;
   enum {
-    SEND_INTERVAL = 15*1024U,
+    SEND_INTERVAL = 60*1024U,
   };
 
   event void ReadSensor.readDone(error_t err, uint16_t val) { }  
@@ -63,7 +66,7 @@ implementation {
     call SerialControl.start();
   }
   event void SerialControl.startDone(error_t err) {
-    if (TOS_NODE_ID % 500 == SINK_ID) {
+    if (TOS_NODE_ID == SINK_ID) {
       call LowPowerListening.setLocalWakeupInterval(0);
     }
     call RadioControl.start();
@@ -75,7 +78,7 @@ implementation {
     else {
       //call DisseminationControl.start();
       call RoutingControl.start();
-      if (TOS_NODE_ID % 500 == SINK_ID) {
+      if (TOS_NODE_ID == SINK_ID) {
 	call RootControl.setRoot();
       }
       seqno = 0;
@@ -95,6 +98,9 @@ implementation {
   void sendMessage() {
     TestNetworkMsg* msg = (TestNetworkMsg*)call Send.getPayload(&packet, sizeof(TestNetworkMsg));
     uint16_t metric;
+	//BloomF bf;
+	//char nodeID[10];
+	
     am_addr_t parent = 0;
 	sendCountLocal++;
 
@@ -107,6 +113,9 @@ implementation {
     msg->parent = parent;
     msg->hopcount = 0;
     msg->metric = metric;
+	
+	//itoa(TOS_NODE_ID, nodeID, 10);
+	//memcpy(&bf, call bloom.bloom_insert(nodeID, strlen(nodeID)), sizeof(BloomF));
 
     if (call Send.send(&packet, sizeof(TestNetworkMsg)) != SUCCESS) {
       failedSend();
