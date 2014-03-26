@@ -43,6 +43,7 @@ module DutyCycleP{
 	uses interface LocalTime<T32khz> as LocalTime32khz;
 	uses interface CollectionDebug as Debug;
 	uses interface SplitControl as RadioControl;
+	uses interface StdControl as RoutingControl;
 #endif
 	uses interface Leds;
 } 
@@ -53,8 +54,9 @@ implementation {
 	uint32_t totalTime;
 	uint32_t upTimeData, upStartTime;
 	uint32_t upTimeIdle;
+	uint32_t total_on;
 	enum {
-		ENERGY_LIMIT = 65535L
+		ENERGY_LIMIT = 0x140
 	};
 	
 	command error_t Init.init() {
@@ -62,6 +64,7 @@ implementation {
    		totalTime = 0;
    		upTimeData = 0;
    		upTimeIdle = 0;
+		total_on = 0;
    		call Timer.startPeriodic(100000L);
     	return SUCCESS;
   	}
@@ -86,7 +89,9 @@ implementation {
   
 	command void DutyCycle.radioOff(bool action){
 	   	uint32_t now = call LocalTime32khz.get();
-	   	uint32_t d;
+	   	uint32_t d, total;
+		uint16_t time;
+		
     	updateEnergyStat(now);
  		if (now < upStartTime) {
    			d = (now + ((uint32_t)0xFFFFFFFF - upStartTime));
@@ -98,23 +103,37 @@ implementation {
  		} else {
 	 		upTimeIdle += d;
  		}
- 		if(upTimeData + upTimeIdle > ENERGY_LIMIT)
-			call RadioControl.stop();
+ 		total_on += d;
+		if(TOS_NODE_ID != SINK_ID){
+ 			if((total_on>>10) > 0x140){
+				time = (uint16_t)(call Timer.getNow() / 1024);
+	   			call Debug.logEventDbg(NET_C_DIE, (uint16_t)(total_on >> 10), time,0);
+				call RoutingControl.stop();
+				call RadioControl.stop();
+			}
+		}
+		//call Debug.logEventDbg(NET_C_DIE, (uint16_t)(total_on >> 10),0,0);
+		//else call Debug.logEventDbg(NET_C_DIE, (uint16_t)time, time2, (uint16_t)totalTime1); 
+		//call Debug.logEventDbg(NET_C_DIE, (uint16_t)(total_on >> 10),0,0);
+		
+		   
+	   
 	}
 	event void RadioControl.stopDone(error_t err) {
-		uint16_t time = (uint16_t)(call Timer.getNow() / 1024);
-		totalTime >>= 10;
-		call Debug.logEventDbg(NET_C_DIE, (uint16_t)time, 0, (uint16_t)totalTime); 
+		//uint16_t time = (uint16_t)(call Timer.getNow() / 1024);
+		//totalTime >>= 10;
+		//call Debug.logEventDbg(NET_C_DIE, (uint16_t)time, 0, (uint16_t)totalTime); 
 	}
 	event void RadioControl.startDone(error_t err) {}	
 	event void Timer.fired(){
 	   uint32_t dcycleData = (1000 * upTimeData) / totalTime;	   
-	   uint32_t dcycleIdle = (1000 * upTimeIdle) / totalTime;	   
+	   uint32_t dcycleIdle = (1000 * upTimeIdle) / totalTime;
 	   uint16_t time = (uint16_t)(call Timer.getNow() / 1024);
 	   totalTime = 0;
 	   upTimeData = 0;
 	   upTimeIdle = 0;
 	   call Debug.logEventDbg(NET_DC_REPORT, (uint16_t)dcycleData, time, (uint16_t)dcycleIdle);   
+	   
 	}
 #endif
 	

@@ -47,18 +47,19 @@ implementation {
 #ifndef NO_DEBUG
 	components ActiveMessageC;
 	components UARTDebugSenderP as DebugSender;
+	components CollectionC as Collector;
 	DutyCycleP.RadioControl -> ActiveMessageC;
 	DutyCycleP.Debug -> DebugSender;
-	
-	components Counter32khz32C, new CounterToLocalTimeC(T32khz);
-  	CounterToLocalTimeC.Counter -> Counter32khz32C;
-	DutyCycleP.LocalTime32khz -> CounterToLocalTimeC;
+	DutyCycleP.RoutingControl -> Collector;
 #endif	
 	
 	MainC -> DutyCycleP.Init;
 	
 	DutyCycleP.Timer -> TimerMilliC;
 	
+	components Counter32khz32C, new CounterToLocalTimeC(T32khz);
+  	CounterToLocalTimeC.Counter -> Counter32khz32C;
+	DutyCycleP.LocalTime32khz -> CounterToLocalTimeC;
 	
 	DutyCycle = DutyCycleP;	
 	
