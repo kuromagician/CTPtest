@@ -55,8 +55,9 @@ implementation {
 	uint32_t upTimeData, upStartTime;
 	uint32_t upTimeIdle;
 	uint32_t total_on;
+	bool status;
 	enum {
-		ENERGY_LIMIT = 0x140
+		ENERGY_LIMIT = 0x300
 	};
 	
 	command error_t Init.init() {
@@ -66,6 +67,7 @@ implementation {
    		upTimeIdle = 0;
 		total_on = 0;
    		call Timer.startPeriodic(100000L);
+		status = TRUE;
     	return SUCCESS;
   	}
   	
@@ -104,20 +106,17 @@ implementation {
 	 		upTimeIdle += d;
  		}
  		total_on += d;
+//#ifndef LIMIT_ENG
 		if(TOS_NODE_ID != SINK_ID){
- 			if((total_on>>10) > 0x140){
+ 			if((total_on>>10) > ENERGY_LIMIT){
 				time = (uint16_t)(call Timer.getNow() / 1024);
 	   			call Debug.logEventDbg(NET_C_DIE, (uint16_t)(total_on >> 10), time,0);
 				call RoutingControl.stop();
 				call RadioControl.stop();
+				status = FALSE;
 			}
 		}
-		//call Debug.logEventDbg(NET_C_DIE, (uint16_t)(total_on >> 10),0,0);
-		//else call Debug.logEventDbg(NET_C_DIE, (uint16_t)time, time2, (uint16_t)totalTime1); 
-		//call Debug.logEventDbg(NET_C_DIE, (uint16_t)(total_on >> 10),0,0);
-		
-		   
-	   
+//#endif
 	}
 	event void RadioControl.stopDone(error_t err) {
 		//uint16_t time = (uint16_t)(call Timer.getNow() / 1024);
@@ -132,7 +131,8 @@ implementation {
 	   totalTime = 0;
 	   upTimeData = 0;
 	   upTimeIdle = 0;
-	   call Debug.logEventDbg(NET_DC_REPORT, (uint16_t)dcycleData, time, (uint16_t)dcycleIdle);   
+	   if(status && TOS_NODE_ID != SINK_ID)
+	   	call Debug.logEventDbg(NET_DC_REPORT, (uint16_t)dcycleData, time, (uint16_t)dcycleIdle);   
 	   
 	}
 #endif

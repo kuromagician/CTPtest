@@ -82,6 +82,7 @@ implementation {
 	call RootControl.setRoot();
       }
       seqno = 0;
+	  if(TOS_NODE_ID != SINK_ID)
         call Timer.startOneShot(call Random.rand32() % SEND_INTERVAL);
     }
   }
