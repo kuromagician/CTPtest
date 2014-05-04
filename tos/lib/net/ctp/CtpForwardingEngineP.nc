@@ -735,6 +735,7 @@ implementation {
     if (call CtpPacket.option(msg, CTP_OPT_PULL)) {
       call CtpInfo.triggerRouteUpdate();
     }
+    
 
     return signal Snoop.receive[call CtpPacket.getType(msg)] 
       (msg, payload + sizeof(ctp_data_header_t), 

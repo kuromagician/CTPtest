@@ -16,7 +16,7 @@
 //#include "Bloom.h"
 #include "string.h"
 
-#define SINK_ID 1
+#define SINK_ID 13
 
 module TestNetworkLplC {
   uses interface Boot;
@@ -69,6 +69,7 @@ implementation {
     if (TOS_NODE_ID == SINK_ID) {
       call LowPowerListening.setLocalWakeupInterval(0);
     }
+    //if (TOS_NODE_ID == SINK_ID || TOS_NODE_ID % 2 == 0)
     call RadioControl.start();
   }
   event void RadioControl.startDone(error_t err) {

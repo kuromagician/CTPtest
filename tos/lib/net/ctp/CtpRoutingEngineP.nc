@@ -479,6 +479,7 @@ implementation {
           return msg;
         }
         
+        
         //need to get the am_addr_t of the source
         from = call AMPacket.source(msg);
         rcvBeacon = (ctp_routing_header_t*)payload;
@@ -488,7 +489,7 @@ implementation {
         dbg("TreeRouting","%s from: %d  [ parent: %d etx: %d]\n",
             __FUNCTION__, from, 
             rcvBeacon->parent, rcvBeacon->etx);
-
+        call CollectionDebug.logEventRoute(NET_C_TREE_RCV_BEACON, rcvBeacon->parent, 0, rcvBeacon->etx);
         //update neighbor table
         if (rcvBeacon->parent != INVALID_ADDR) {
 

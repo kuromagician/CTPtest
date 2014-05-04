@@ -54,7 +54,8 @@ enum {
     NET_C_DBG_2 = 0x41,             //:any		:uint16_t a, b, c
     NET_C_DBG_3 = 0x42,             //:any		:uint16_t a, b, c
 	NET_DC_REPORT = 0x60,			//:any		:data duty cycle, time, idle dc
-	NET_C_DIE = 0x71				//:any		:time, counter_uptime, counter_totaltime
+	NET_C_DIE = 0x71,				//:any		:time, counter_uptime, counter_totaltime
+	NET_SNOOP_RCV = 0x72				//snoop receive : 
 };
 
 typedef nx_struct CollectionDebugMsg {

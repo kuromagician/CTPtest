@@ -19,6 +19,7 @@ CFLAGS += -I$(TOSDIR)/lib/net \
           -I$(CONTRIBDIR)/tos/chips/cc2420/interfaces \
           -I$(CONTRIBDIR)/tos/chips/cc2420/lpl \
           -I$(CONTRIBDIR)/tos/chips/cc2420/dc \
+          -I$(CONTRIBDIR)/tos/chips/cc2420/receive \
           -I$(CONTRIBDIR)/tos/lib/net/ctp #-DNO_DEBUG
 		  
 
