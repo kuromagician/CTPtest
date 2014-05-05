@@ -613,7 +613,10 @@ implementation {
         }
       }
 #ifndef NO_DEBUG
+	//log only unicast
+	if (header->dest != 0xFFFF){
       call Debug.logEventMsg(NET_SNOOP_RCV, header->dest, header->src, 0);
+	}
 #endif
       // Didn't flip CSn, we're ok to continue reading.
       call RXFIFO.continueRead(buf + 1 + SACK_HEADER_LENGTH, 

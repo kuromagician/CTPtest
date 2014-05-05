@@ -16,7 +16,9 @@
 //#include "Bloom.h"
 #include "string.h"
 
-#define SINK_ID 13
+#ifndef SINK_ID
+#define SINK_ID 1
+#endif
 
 module TestNetworkLplC {
   uses interface Boot;
