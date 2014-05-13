@@ -2,8 +2,8 @@ COMPONENT=TestNetworkLplAppC
 CONTRIBDIR=$(shell pwd)
 
 CFLAGS += -DLOW_POWER_LISTENING
-CFLAGS += -DLPL_DEF_LOCAL_WAKEUP=512
-CFLAGS += -DLPL_DEF_REMOTE_WAKEUP=512
+CFLAGS += -DLPL_DEF_LOCAL_WAKEUP=256
+CFLAGS += -DLPL_DEF_REMOTE_WAKEUP=256
 CFLAGS += -DDELAY_AFTER_RECEIVE=20
 
 CFLAGS += -DSINK_ID=1
@@ -16,7 +16,7 @@ CTPDIR = $(TOSDIR)/lib/net/ctp
 
 CFLAGS += -I$(TOSDIR)/lib/net \
           -I$(TOSDIR)/lib/net/drip \
-          -I$(TOSDIR)/lib/net/4bitle \
+          -I$(CONTRIBDIR)/tos/lib/net/4bitle \
           -I$(CONTRIBDIR)/tools \
           -I$(CONTRIBDIR)/tos/chips/cc2420/interfaces \
           -I$(CONTRIBDIR)/tos/chips/cc2420/lpl \

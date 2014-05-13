@@ -70,6 +70,9 @@ module DefaultLplP {
     interface Leds;
     interface SystemLowPowerListening;
 	interface DutyCycle;
+	#ifndef NO_DEBUG
+	interface CollectionDebug as Debug;
+	#endif
   }
 }
 
@@ -257,8 +260,13 @@ implementation {
     // Wait long enough to see if we actually receive a packet, which is
     // just a little longer in case there is more than one lpl transmitter on
     // the channel.
+    
     if( !call OffTimer.isRunning() ){
     	startOffTimer();
+	#ifndef NO_DEBUG
+    call Debug.logEventMsg(NET_SNOOP_RCV, 0, 0, 0);
+	#endif
+	
     }
   }
   
@@ -267,9 +275,9 @@ implementation {
   event void SubControl.startDone(error_t error) {
     if(!error) {
       call RadioPowerState.forceState(S_ON);
-      
+      #ifndef NO_DEBUG
 	  call DutyCycle.radioOn();
-	  
+	  #endif
       if(call SendState.getState() == S_LPL_FIRST_MESSAGE
           || call SendState.getState() == S_LPL_SENDING) {
         initializeSend();
@@ -282,9 +290,9 @@ implementation {
     
   event void SubControl.stopDone(error_t error) {
     if(!error) {
-		
+		#ifndef NO_DEBUG
 		call DutyCycle.radioOff(action);
-
+#endif
       if(call SendState.getState() == S_LPL_FIRST_MESSAGE
           || call SendState.getState() == S_LPL_SENDING) {
         // We're in the middle of sending a message; start the radio back up
@@ -342,6 +350,7 @@ implementation {
       uint8_t len) {
     startOffTimer();
 	action = TRUE;
+	
     return signal Receive.receive(msg, payload, len);
   }
   

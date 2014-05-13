@@ -409,6 +409,7 @@ implementation {
             beaconMsg->options |= CTP_OPT_PULL;
         } else {
             beaconMsg->etx = routeInfo.etx + call LinkEstimator.getLinkQuality(routeInfo.parent);
+			call CollectionDebug.logEventRoute(0x73, call LinkEstimator.getLinkQuality(routeInfo.parent), 0, 0);
         }
 
         dbg("TreeRouting", "%s parent: %d etx: %d\n",

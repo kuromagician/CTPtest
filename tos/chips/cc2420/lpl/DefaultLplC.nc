@@ -51,6 +51,7 @@ configuration DefaultLplC {
     interface Send as SubSend;
     interface Receive as SubReceive;
     interface SplitControl as SubControl;
+	
   }
 }
 
@@ -100,5 +101,7 @@ implementation {
   DefaultLplP.SystemLowPowerListening -> SystemLowPowerListeningC;
 #ifndef NO_DEBUG
   DefaultLplP.DutyCycle -> DutyCycleC;
+  components UARTDebugSenderP as DebugSender;
+  DefaultLplP.Debug -> DebugSender;
 #endif	
 }
