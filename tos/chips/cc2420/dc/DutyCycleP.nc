@@ -57,7 +57,7 @@ implementation {
 	uint32_t total_on;
 	bool status;
 	enum {
-		ENERGY_LIMIT = 0x1000
+		ENERGY_LIMIT = 0x4000
 	};
 	
 	command error_t Init.init() {
@@ -124,8 +124,8 @@ implementation {
 	event void RadioControl.startDone(error_t err) {}	
 	
 	event void Timer.fired(){
-	   uint32_t dcycleData = (10000 * upTimeData) / totalTime;	   
-	   uint32_t dcycleIdle = (10000 * upTimeIdle) / totalTime;
+	   uint32_t dcycleData = ((uint64_t)10000 * upTimeData) / totalTime;	   
+	   uint32_t dcycleIdle = ((uint64_t)10000 * upTimeIdle) / totalTime;
 	   uint16_t time = (uint16_t)(call Timer.getNow() / 1024);
 	   totalTime = 0;
 	   upTimeData = 0;

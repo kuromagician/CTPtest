@@ -249,7 +249,8 @@ implementation {
       }
 
       atomic {
-        for( ; ccaChecks < MAX_LPL_CCA_CHECKS && call SendState.isIdle(); ccaChecks++) {
+         //for( ; ccaChecks < MAX_LPL_CCA_CHECKS && call SendState.isIdle(); ccaChecks++) {
+         for( ; ccaChecks < 900 && call SendState.isIdle(); ccaChecks++) {
           if(call PacketIndicator.isReceiving()) {
             signal PowerCycle.detected();
             return;
