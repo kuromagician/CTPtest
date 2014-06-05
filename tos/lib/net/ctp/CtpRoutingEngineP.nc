@@ -490,7 +490,7 @@ implementation {
         dbg("TreeRouting","%s from: %d  [ parent: %d etx: %d]\n",
             __FUNCTION__, from, 
             rcvBeacon->parent, rcvBeacon->etx);
-        call CollectionDebug.logEventRoute(NET_C_TREE_RCV_BEACON, rcvBeacon->parent, 0, rcvBeacon->etx);
+        call CollectionDebug.logEventRoute(NET_C_TREE_RCV_BEACON, (uint16_t)from, 0, rcvBeacon->etx);
         //update neighbor table
         if (rcvBeacon->parent != INVALID_ADDR) {
 

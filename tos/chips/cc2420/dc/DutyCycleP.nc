@@ -124,6 +124,7 @@ implementation {
 	event void RadioControl.startDone(error_t err) {}	
 	
 	event void Timer.fired(){
+		//maybe an atomic section is needed
 	   uint32_t dcycleData = ((uint64_t)10000 * upTimeData) / totalTime;	   
 	   uint32_t dcycleIdle = ((uint64_t)10000 * upTimeIdle) / totalTime;
 	   uint16_t time = (uint16_t)(call Timer.getNow() / 1024);

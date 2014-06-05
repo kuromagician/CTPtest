@@ -25,8 +25,7 @@ CTPDIR = $(TOSDIR)/lib/net/ctp
 
 CFLAGS += -I$(TOSDIR)/lib/net \
           -I$(TOSDIR)/lib/net/drip \
-          -I$(CONTRIBDIR)/tos/lib/net/4bitle \
-          -I$(CONTRIBDIR)/tools \
+          -I$(TOSDIR)/lib/net/4bitle \
           -I$(CONTRIBDIR)/tos/chips/cc2420/interfaces \
           -I$(CONTRIBDIR)/tos/chips/cc2420/lpl \
           -I$(CONTRIBDIR)/tos/chips/cc2420/dc \
