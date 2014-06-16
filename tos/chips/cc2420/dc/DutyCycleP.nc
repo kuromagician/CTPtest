@@ -57,7 +57,10 @@ implementation {
 	uint32_t total_on;
 	bool status;
 	enum {
-		ENERGY_LIMIT = 0x4000
+		//0x2000 = 256s
+		ENERGY_LIMIT = 0x2000,
+		//equals 10 minutes
+		TIME_TH = 614400L,
 	};
 	
 	command error_t Init.init() {
@@ -105,19 +108,22 @@ implementation {
  		} else {
 	 		upTimeIdle += d;
  		}
-		/*total_on += d;
+ 		//only record the data after 10 minutes
+ 		if (call Timer.getNow() >= TIME_TH ){
+			total_on += d;
 
-		if(TOS_NODE_ID != SINK_ID){
-			atomic{
-				if((total_on>>10) > ENERGY_LIMIT){
-						call RoutingControl.stop();
-						call RadioControl.stop();
-						time = (uint16_t)(call Timer.getNow() / 1024);
-						call Debug.logEventDbg(NET_C_DIE, (uint16_t)(total_on >> 10), time,0);
-						status = FALSE;
+			if(TOS_NODE_ID != SINK_ID){
+				atomic{
+					if((total_on>>10) > ENERGY_LIMIT){
+							call RoutingControl.stop();
+							call RadioControl.stop();
+							time = (uint16_t)(call Timer.getNow() / 1024);
+							call Debug.logEventDbg(NET_C_DIE, (uint16_t)(total_on >> 10), time,0);
+							status = FALSE;
+					}
 				}
 			}
-		}*/
+		}
 
 	}
 	event void RadioControl.stopDone(error_t err) {}
