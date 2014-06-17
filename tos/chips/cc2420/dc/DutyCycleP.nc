@@ -56,6 +56,7 @@ implementation {
 	uint32_t upTimeIdle;
 	uint32_t total_on;
 	bool status;
+	bool radio_status;
 	enum {
 		//0x2000 = 256s
 		ENERGY_LIMIT = 0x2000,
@@ -71,6 +72,7 @@ implementation {
 		total_on = 0;
    		call Timer.startPeriodic(100000L);
 		status = TRUE;
+		radio_status = FALSE;
     	return SUCCESS;
   	}
   	
@@ -90,13 +92,13 @@ implementation {
 	   	uint32_t now = call LocalTime32khz.get();
     	updateEnergyStat(now);
    		upStartTime = now;
+   		radio_status = TRUE;
 	}
   
 	command void DutyCycle.radioOff(bool action){
 	   	uint32_t now = call LocalTime32khz.get();
 	   	uint32_t d, total;
 		uint16_t time;
-		
     	updateEnergyStat(now);
  		if (now < upStartTime) {
    			d = (now + ((uint32_t)0xFFFFFFFF - upStartTime));
@@ -108,6 +110,7 @@ implementation {
  		} else {
 	 		upTimeIdle += d;
  		}
+ 		radio_status = FALSE;
  		//only record the data after 10 minutes
  		if (call Timer.getNow() >= TIME_TH ){
 			total_on += d;
@@ -130,15 +133,27 @@ implementation {
 	event void RadioControl.startDone(error_t err) {}	
 	
 	event void Timer.fired(){
-		//maybe an atomic section is needed
-	   uint32_t dcycleData = ((uint64_t)10000 * upTimeData) / totalTime;	   
-	   uint32_t dcycleIdle = ((uint64_t)10000 * upTimeIdle) / totalTime;
-	   uint16_t time = (uint16_t)(call Timer.getNow() / 1024);
-	   totalTime = 0;
-	   upTimeData = 0;
-	   upTimeIdle = 0;
-	   if(status && TOS_NODE_ID != SINK_ID)
-	   	call Debug.logEventDbg(NET_DC_REPORT, (uint16_t)dcycleData, time, (uint16_t)dcycleIdle);   
+		uint32_t dcycleData, dcycleIdle;
+		uint16_t time;
+		//force update the data, but keep the current state unchanged
+		if (radio_status){ 
+			call DutyCycle.radioOff(TRUE);
+			call DutyCycle.radioOn();
+		}
+		else{
+			call DutyCycle.radioOn();
+			call DutyCycle.radioOff(FALSE);
+		}
+		dcycleData = ((uint64_t)10000 * upTimeData) / totalTime;	   
+		dcycleIdle = ((uint64_t)10000 * upTimeIdle) / totalTime;
+		time = (uint16_t)(call Timer.getNow() / 1024);
+		atomic{
+			totalTime = 0;
+			upTimeData = 0;
+			upTimeIdle = 0;
+		}
+		if(status && TOS_NODE_ID != SINK_ID)
+			call Debug.logEventDbg(NET_DC_REPORT, (uint16_t)dcycleData, time, (uint16_t)dcycleIdle);   
 	}
 #endif
 	
