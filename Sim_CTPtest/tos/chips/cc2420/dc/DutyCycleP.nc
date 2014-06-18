@@ -129,7 +129,7 @@ implementation {
 							#ifndef NO_DEBUG
 							call Debug.logEventDbg(NET_C_DIE, (uint16_t)(total_on >> 10), time, 0);
 							#endif
-							printf("%u  %u %u %u\n", NET_C_DIE, (uint16_t)(total_on >> 10), time, 0);
+							printf("%u   %u  %u %u %u\n", FILE_TYPE_DEBUG, NET_C_DIE, (uint16_t)(total_on >> 10), time, 0);
 							printfflush();
 							status = FALSE;
 					}
@@ -168,7 +168,7 @@ implementation {
 			#ifndef NO_DEBUG
 			call Debug.logEventDbg(NET_DC_REPORT, (uint16_t)dcycleData, time, (uint16_t)dcycleIdle);   
 			#endif	   	
-			printf("%u  %u %u %u\n", NET_DC_REPORT, (uint16_t)dcycleData, time, (uint16_t)dcycleIdle);
+			printf("%u   %u  %u %u %u\n", FILE_TYPE_DEBUG, NET_DC_REPORT, (uint16_t)dcycleData, time, (uint16_t)dcycleIdle);
 			printfflush();
 		}
 	}

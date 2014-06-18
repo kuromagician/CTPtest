@@ -267,7 +267,7 @@ implementation {
 	#ifndef NO_DEBUG
     call Debug.logEventMsg(NET_SNOOP_RCV, 0, 0, 0);
 	#endif
-	printf("%u  %u %u %u\n", NET_SNOOP_RCV, 0, 0, 0);
+	printf("%u   %u  %u %u %u\n", FILE_TYPE_DEBUG, NET_SNOOP_RCV, 0, 0, 0);
 	printfflush();
     }
   }
