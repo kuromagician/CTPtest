@@ -70,9 +70,8 @@ implementation {
       LedsC,
       NbTableP;
 	
-#ifndef NO_OPP_DEBUG
    components DutyCycleC;
-#endif	
+
   
   LowPowerListening = DefaultLplP;
   Send = DefaultLplP;
@@ -99,8 +98,9 @@ implementation {
   DefaultLplP.Random -> RandomC;
   DefaultLplP.Leds -> LedsC;
   DefaultLplP.SystemLowPowerListening -> SystemLowPowerListeningC;
-#ifndef NO_OPP_DEBUG
   DefaultLplP.DutyCycle -> DutyCycleC;
+#ifndef NO_OPP_DEBUG
+  
   components OppUARTDebugSenderP as DebugSender;
    DefaultLplP.OppDebug -> DebugSender;
 #endif	

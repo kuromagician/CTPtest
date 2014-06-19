@@ -31,6 +31,7 @@
  * @author Olaf Landsiedel
  * @author Omprakash Gnawali
  */
+#include "printf.h"
 
 module DutyCycleP{
 
@@ -106,6 +107,7 @@ implementation {
 	 		upTimeIdle += d;
  		}
  		radio_status = FALSE;
+ 		
  		//only record the data after 10 minutes
  		if (call Timer.getNow() >= TIME_TH && status){
 			total_on += d;
@@ -113,7 +115,11 @@ implementation {
 				if((total_on>>10) > ENERGY_LIMIT){
 					atomic{
 						time = (uint16_t)(call Timer.getNow() / 1024);
+						#ifndef NO_OPP_DEBUG
 						call OppDebug.logEventDbg(NET_C_DIE, (uint16_t)(total_on >> 10), time,0);
+						#endif
+						printf("%u   %u  %u %u %u\n", FILE_TYPE_ORWDEBUG, NET_C_DIE, (uint16_t)(total_on >> 10), time, 0);
+						printfflush();
 						call RadioControl.stop();
 						status = FALSE;
 					}
@@ -147,8 +153,13 @@ implementation {
 				upTimeData = 0;
 				upTimeIdle = 0;
 			}
-			if(TOS_NODE_ID != SINK_ID)
+			if(TOS_NODE_ID != SINK_ID){
+				#ifndef NO_OPP_DEBUG
 				call OppDebug.logEventDbg(NET_DC_REPORT, (uint16_t)dcycleData, time, (uint16_t)dcycleIdle); 
+				#endif
+				printf("%u   %u  %u %u %u\n", FILE_TYPE_ORWDEBUG, NET_DC_REPORT, (uint16_t)dcycleData, time, (uint16_t)dcycleIdle);
+				printfflush();
+			}
 		}  
 	}
 	

@@ -59,7 +59,9 @@ enum {
 
     NET_APP_SENT = 0x70,             //app. send       :msg uid, origin
 	NET_C_DIE = 0x71,
-	NET_SNOOP_RCV = 0x72
+	NET_SNOOP_RCV = 0x72,
+	FILE_TYPE_ORWDEBUG = 2,
+	FILE_TYPE_ORWNT = 3
 
 };
 

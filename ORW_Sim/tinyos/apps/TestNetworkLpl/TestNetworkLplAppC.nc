@@ -29,8 +29,8 @@ implementation {
   TestNetworkLplC.Packet -> OppC;  
   TestNetworkLplC.Random -> RandomC;  
   TestNetworkLplC.ActiveMessageAddress -> ActiveMessageAddressC;
-  //components SerialPrintfC;
-  //components SerialStartC;
+  components SerialPrintfC;
+  components SerialStartC;
   
 #ifdef CHURN
 #warning CHURN enabled

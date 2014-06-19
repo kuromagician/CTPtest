@@ -32,7 +32,7 @@
  */
  
 #include "opp.h"
-//#include "printf.h"
+#include "printf.h"
 
 module OppP{
 
@@ -432,46 +432,88 @@ implementation {
 	}
  	
  	void logSent(message_t* msg){
+		#ifndef NO_OPP_DEBUG
 		call OppDebug.logEventMsg(NET_C_FE_SENT_MSG, 
 					call OppPacket.getSeqNum(msg), 
 					call OppPacket.getSource(msg), 
                     call AMPacket.destination(msg));
+		#endif
+		printf("%u   %u  %u %u %u\n", FILE_TYPE_ORWDEBUG, 
+					NET_C_FE_SENT_MSG, 
+					call OppPacket.getSeqNum(msg), 
+					call OppPacket.getSource(msg), 
+                    call AMPacket.destination(msg));
+		printfflush();
   	}
 
  	void logSentFail(message_t* msg){
+		#ifndef NO_OPP_DEBUG
 		call OppDebug.logEventMsg(NET_C_FE_SENDDONE_WAITACK, 
 					call OppPacket.getSeqNum(msg), 
 					call OppPacket.getSource(msg), 
                     call AMPacket.destination(msg));
+		#endif
+		printf("%u   %u  %u %u %u\n", FILE_TYPE_ORWDEBUG, 
+					 NET_C_FE_SENDDONE_WAITACK, 
+					call OppPacket.getSeqNum(msg), 
+					call OppPacket.getSource(msg), 
+                    call AMPacket.destination(msg));
+		printfflush();
   	}
 
  	void logReceive(message_t* msg){
+		#ifndef NO_OPP_DEBUG
     	call OppDebug.logEventMsg(NET_C_FE_RCV_MSG,
 					 call OppPacket.getSeqNum(msg), 
 					 call OppPacket.getSource(msg), 
 				     call AMPacket.source(msg));
+		#endif
+		printf("%u   %u  %u %u %u\n", FILE_TYPE_ORWDEBUG, 
+					 NET_C_FE_RCV_MSG,
+					 call OppPacket.getSeqNum(msg), 
+					 call OppPacket.getSource(msg), 
+				     call AMPacket.source(msg));
+		printfflush();
  	}
 
  	void logLLDupReceive(message_t* msg){
+		#ifndef NO_OPP_DEBUG
  		call OppDebug.logEventMsg(NET_LL_DUPLICATE, 
 					 //maybe we should log dsn here? 
 					 call OppPacket.getSeqNum(msg),
 					 call OppPacket.getSource(msg), 
 				     call AMPacket.source(msg));
+		#endif
  	}
 
  	void logMediumBusy(message_t* msg){
+		#ifndef NO_OPP_DEBUG
  		call OppDebug.logEventMsg(NET_C_FE_SENDDONE_FAIL, 
 					 call OppPacket.getSeqNum(msg),
 					 call OppPacket.getSource(msg), 
 				     call AMPacket.destination(msg));
+		#endif
+		printf("%u   %u  %u %u %u\n", FILE_TYPE_ORWDEBUG, 
+					 NET_C_FE_SENDDONE_FAIL, 
+					 call OppPacket.getSeqNum(msg),
+					 call OppPacket.getSource(msg), 
+				     call AMPacket.destination(msg));
+		printfflush();
  	}
 
  	void logAppSent(message_t* msg){
+		#ifndef NO_OPP_DEBUG
  		call OppDebug.logEventMsg(NET_APP_SENT, 
 					 call OppPacket.getSeqNum(msg),
 					 call OppPacket.getSource(msg), 
 				     0);
+		#endif
+		printf("%u   %u  %u %u %u\n", FILE_TYPE_ORWDEBUG, 
+					 NET_APP_SENT, 
+					 call OppPacket.getSeqNum(msg),
+					 call OppPacket.getSource(msg), 
+				     0);
+		printfflush();
  	}
 
  	task void logQueueFull_task(){

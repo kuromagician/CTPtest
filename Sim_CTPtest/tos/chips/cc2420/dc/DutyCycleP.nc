@@ -62,7 +62,7 @@ implementation {
 	bool radio_status;
 	enum {
 		//0x2000 = 256s
-		ENERGY_LIMIT = 0x2000,
+		ENERGY_LIMIT = 0x1000,
 		//equals 10 minutes
 		TIME_TH = 614400L,
 	};
@@ -115,11 +115,9 @@ implementation {
 	 		upTimeIdle += d;
  		}
  		radio_status = FALSE;
- 		/*
  		//only record the data after 10 minutes
- 		if (call Timer.getNow() >= TIME_TH ){
+ 		if (call Timer.getNow() >= TIME_TH && status){
 			total_on += d;
-
 			if(TOS_NODE_ID != SINK_ID){
 				atomic{
 					if((total_on>>10) > ENERGY_LIMIT){
@@ -136,7 +134,6 @@ implementation {
 				}
 			}
 		}
-		*/
 
 	}
 	event void RadioControl.stopDone(error_t err) {}
@@ -145,31 +142,32 @@ implementation {
 	event void Timer.fired(){
 		uint32_t dcycleData, dcycleIdle;
 		uint16_t time;
-		
-		//force update the data, but keep the current state unchanged
-		if (radio_status){ 
-			call DutyCycle.radioOff(TRUE);
-			call DutyCycle.radioOn();
-		}
-		else{
-			call DutyCycle.radioOn();
-			call DutyCycle.radioOff(FALSE);
-		}
-		//maybe an atomic section is needed
-		dcycleData = ((uint64_t)10000 * upTimeData) / totalTime;	   
-		dcycleIdle = ((uint64_t)10000 * upTimeIdle) / totalTime;
-		time = (uint16_t)(call Timer.getNow() / 1024);
-		atomic{
-			totalTime = 0;
-			upTimeData = 0;
-			upTimeIdle = 0;
-		}
-		if(status && TOS_NODE_ID != SINK_ID){
-			#ifndef NO_DEBUG
-			call Debug.logEventDbg(NET_DC_REPORT, (uint16_t)dcycleData, time, (uint16_t)dcycleIdle);   
-			#endif	   	
-			printf("%u   %u  %u %u %u\n", FILE_TYPE_DEBUG, NET_DC_REPORT, (uint16_t)dcycleData, time, (uint16_t)dcycleIdle);
-			printfflush();
+		if (status){
+			//force update the data, but keep the current state unchanged
+			if (radio_status){ 
+				call DutyCycle.radioOff(TRUE);
+				call DutyCycle.radioOn();
+			}
+			else{
+				call DutyCycle.radioOn();
+				call DutyCycle.radioOff(FALSE);
+			}
+			//maybe an atomic section is needed
+			dcycleData = ((uint64_t)10000 * upTimeData) / totalTime;	   
+			dcycleIdle = ((uint64_t)10000 * upTimeIdle) / totalTime;
+			time = (uint16_t)(call Timer.getNow() / 1024);
+			atomic{
+				totalTime = 0;
+				upTimeData = 0;
+				upTimeIdle = 0;
+			}
+			if(TOS_NODE_ID != SINK_ID){
+				#ifndef NO_DEBUG
+				call Debug.logEventDbg(NET_DC_REPORT, (uint16_t)dcycleData, time, (uint16_t)dcycleIdle);   
+				#endif	   	
+				printf("%u   %u  %u %u %u\n", FILE_TYPE_DEBUG, NET_DC_REPORT, (uint16_t)dcycleData, time, (uint16_t)dcycleIdle);
+				printfflush();
+			}
 		}
 	}
 	

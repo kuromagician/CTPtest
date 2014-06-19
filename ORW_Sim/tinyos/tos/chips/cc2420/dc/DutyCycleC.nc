@@ -45,14 +45,15 @@ implementation {
 	components LedsC;
 #ifndef NO_OPP_DEBUG
   	components OppUARTDebugSenderP as DebugSender;
+  	DutyCycleP.OppDebug -> DebugSender;
+#endif	
 	components OppC;
 	DutyCycleP.RadioControl -> OppC;
-#endif	
 	
 	MainC -> DutyCycleP.Init;
 	
 	DutyCycleP.Timer -> TimerMilliC;
-	DutyCycleP.OppDebug -> DebugSender;
+	
 	
 	DutyCycle = DutyCycleP;	
 

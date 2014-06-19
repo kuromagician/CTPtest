@@ -94,7 +94,9 @@ implementation {
 
 	error_t enqueue(message_t* msg){
         if (call SendQueue.enqueue(msg) == SUCCESS) {
+			#ifndef NO_OPP_DEBUG
             post sendTask();
+            #endif
             return SUCCESS;
         } else {
             call MessagePool.put(msg);
@@ -166,6 +168,8 @@ implementation {
 		} else {
 			int i;
 			error_t ret = buildDebugMsg( type, edc, nextHopEdc, indexesInUse, indexes, avgDc, txTime, timestamp);
+			printf("%u   %u  %u %u %u\n", FILE_TYPE_ORWNT, type, indexesInUse, edc, nextHopEdc);
+			printfflush();
 			if (ret != SUCCESS ) return ret;
 			for( i = 0; i < NT_DUMP_MSG_COUNT; i++ ){			
 				ret =  buildDumpMsg(i, nbTable, p);    		
