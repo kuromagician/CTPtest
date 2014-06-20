@@ -125,7 +125,8 @@ implementation {
 	CC2420ReceiveP.OppDebug -> DebugSender;
 //	DefaultLplP.OppDebug -> DebugSender;
 //  	TestNetworkC.CollectionDebug -> DebugSender;
-
+#endif
+	components SerialActiveMessageC;
 	components new SerialAMSenderC(AM_NTDEBUGMSG) as UARTSenderDebug;
 	components new SerialAMSenderC(AM_NTDEBUGDUMPMSG) as UARTSenderDump;
   	components NtUARTDebugSenderP as NtDebugSender;
@@ -140,5 +141,5 @@ implementation {
   	NtDebugSender.Packet -> SerialActiveMessageC;  	  	  	
 	NtDebugSender.Leds -> LedsC;
 	NbTableP.NtDebug -> NtDebugSender;
-#endif	
+	
 } 
