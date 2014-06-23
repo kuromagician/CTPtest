@@ -484,6 +484,12 @@ implementation {
 					 call OppPacket.getSource(msg), 
 				     call AMPacket.source(msg));
 		#endif
+		printf("%u   %u  %u %u %u\n", FILE_TYPE_ORWDEBUG, 
+					 NET_LL_DUPLICATE, 
+					 call OppPacket.getSeqNum(msg),
+					 call OppPacket.getSource(msg), 
+				     call AMPacket.source(msg));
+		printfflush();
  	}
 
  	void logMediumBusy(message_t* msg){
@@ -517,7 +523,12 @@ implementation {
  	}
 
  	task void logQueueFull_task(){
+		#ifndef NO_OPP_DEBUG
  		call OppDebug.logEvent(NET_C_FE_MSG_POOL_EMPTY);
+		#endif
+ 		printf("%u   %u  %u %u %u\n", FILE_TYPE_ORWDEBUG, 
+					 NET_C_FE_MSG_POOL_EMPTY, 0, 0, 0);
+		printfflush();
  	}
 
 	event message_t* SubDupReceive.receive(message_t *msg, void *payload, uint8_t len){

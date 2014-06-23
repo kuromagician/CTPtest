@@ -60,7 +60,7 @@ implementation {
     else {
 		call ActiveMessageAddress.setAddress(call ActiveMessageAddress.amGroup(), TOS_NODE_ID);
     	if( TOS_NODE_ID != SINK_ID){
-        	call Timer.startOneShot(call Random.rand32() % SEND_INTERVAL);
+        	call Timer.startOneShot((call Random.rand32() + 100*TOS_NODE_ID) % SEND_INTERVAL);
 	      	//call Timer.startOneShot( 30*1024L*((TOS_NODE_ID % 4) + 1) );
 	    }
     }

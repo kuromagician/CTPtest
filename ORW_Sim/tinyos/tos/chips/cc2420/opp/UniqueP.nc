@@ -39,6 +39,7 @@
  */
   
 #include "opp.h"
+#include "printf.h"
 
 module UniqueP{
   provides {
@@ -123,10 +124,18 @@ implementation {
   }  
   
   void logDup(message_t* msg){
+  #ifndef NO_OPP_DEBUG
 	call OppDebug.logEventMsg(NET_C_FE_DUPLICATE_CACHE, 
 				call OppPacket.getSeqNum(msg), 
 				call OppPacket.getSource(msg), 
                 call AMPacket.source(msg));
+  #endif
+	printf("%u   %u  %u %u %u\n", FILE_TYPE_ORWDEBUG, 
+					NET_C_FE_DUPLICATE_CACHE, 
+					call OppPacket.getSeqNum(msg), 
+					call OppPacket.getSource(msg), 
+					call AMPacket.source(msg));
+	printfflush();
   }
   
   	default command error_t OppDebug.logEventMsg(uint8_t type, uint16_t msg, am_addr_t origin, am_addr_t node) {

@@ -56,7 +56,7 @@ implementation {
 	bool radio_status;
 	enum {
 		//0x2000 = 256s
-		ENERGY_LIMIT = 0x1000,
+		ENERGY_LIMIT = 0x4000,
 		//equals 10 minutes
 		TIME_TH = 614400L,
 	};
@@ -148,11 +148,11 @@ implementation {
 			dcycleData = ((uint64_t)10000 * upTimeData) / totalTime;	   
 			dcycleIdle = ((uint64_t)10000 * upTimeIdle) / totalTime;
 			time = (uint16_t)(call Timer.getNow() / 1024);
-			atomic{
-				totalTime = 0;
-				upTimeData = 0;
-				upTimeIdle = 0;
-			}
+
+			totalTime = 0;
+			upTimeData = 0;
+			upTimeIdle = 0;
+
 			if(TOS_NODE_ID != SINK_ID){
 				#ifndef NO_OPP_DEBUG
 				call OppDebug.logEventDbg(NET_DC_REPORT, (uint16_t)dcycleData, time, (uint16_t)dcycleIdle); 
