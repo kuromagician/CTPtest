@@ -21,6 +21,7 @@ implementation {
   components CollectionC as Collector;
   components new CollectionSenderC(CL_TEST);
   components new TimerMilliC();
+  components new TimerMilliC() as DelayTimer;
   components new DemoSensorC();
   components new SerialAMSenderC(AM_DUMMY) as dummysender;
   components SerialActiveMessageC;
@@ -40,6 +41,7 @@ implementation {
   TestNetworkLplC.DisseminationControl -> DisseminationC;
   TestNetworkLplC.Leds -> LedsC;
   TestNetworkLplC.Timer -> TimerMilliC;
+  TestNetworkLplC.myTimer -> DelayTimer;
   TestNetworkLplC.DisseminationPeriod -> Object32C;
   TestNetworkLplC.Send -> CollectionSenderC;
   TestNetworkLplC.ReadSensor -> DemoSensorC;

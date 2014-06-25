@@ -35,6 +35,7 @@ implementation {
   message_t packet;
   bool sendBusy = FALSE;
   uint16_t counter;
+  uint32_t time_offset;
 
   enum {
     SEND_INTERVAL = 60L*TEST_NETWORK_PACKET_RATE,
@@ -49,6 +50,7 @@ implementation {
 #endif 
     counter = 0;
     sendBusy = FALSE;
+    time_offset = 100L*TOS_NODE_ID;
 	//if( TOS_NODE_ID == SINK_ID ||TOS_NODE_ID % 2 == 0)
     	call RadioControl.start();
   }
@@ -60,7 +62,7 @@ implementation {
     else {
 		call ActiveMessageAddress.setAddress(call ActiveMessageAddress.amGroup(), TOS_NODE_ID);
     	if( TOS_NODE_ID != SINK_ID){
-        	call Timer.startOneShot((call Random.rand32() + 100*TOS_NODE_ID) % SEND_INTERVAL);
+        	call Timer.startOneShot((call Random.rand32()) % SEND_INTERVAL);
 	      	//call Timer.startOneShot( 30*1024L*((TOS_NODE_ID % 4) + 1) );
 	    }
     }
@@ -86,7 +88,7 @@ implementation {
  
   event void Timer.fired() {
     uint32_t nextInt;
-    nextInt = call Random.rand32() % SEND_INTERVAL;
+    nextInt = (call Random.rand32()) % SEND_INTERVAL;
     nextInt += SEND_INTERVAL >> 1;
     call Timer.startOneShot(nextInt);
     if (!sendBusy) sendMessage();

@@ -187,7 +187,7 @@ implementation {
     void chooseAdvertiseTime() {
        t = currentInterval;
        t /= 2;
-       t += call Random.rand32() % t;
+       t += (call Random.rand32() + TOS_NODE_ID*131)% t;
        tHasPassed = FALSE;
        call BeaconTimer.startOneShot(t);
     }

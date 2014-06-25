@@ -31,6 +31,7 @@ module TestNetworkLplC {
   uses interface Leds;
   uses interface Read<uint16_t> as ReadSensor;
   uses interface Timer<TMilli>;
+  uses interface Timer<TMilli> as myTimer;
   uses interface RootControl;
   uses interface Receive;
   uses interface AMSend as UARTSend;
@@ -73,7 +74,8 @@ implementation {
       call LowPowerListening.setLocalWakeupInterval(0);
     }
     //if (TOS_NODE_ID == SINK_ID || TOS_NODE_ID % 2 == 0)
-    call RadioControl.start();
+    call myTimer.startOneShot(TOS_NODE_ID*2043L);
+    //call RadioControl.start();
   }
   event void RadioControl.startDone(error_t err) {
     if (err != SUCCESS) {
@@ -87,10 +89,17 @@ implementation {
       }
       seqno = 0;
 	  if(TOS_NODE_ID != SINK_ID)
-        call Timer.startOneShot(call Random.rand32() % SEND_INTERVAL);
+        call Timer.startOneShot((call Random.rand32() + TOS_NODE_ID*131)% SEND_INTERVAL);
+        //delay the start
+        
     }
   }
 
+  event void myTimer.fired() {
+    call RadioControl.start();
+    //call Timer.startOneShot((call Random.rand32() + TOS_NODE_ID*131L)% SEND_INTERVAL);
+  }
+  
   event void RadioControl.stopDone(error_t err) {}
   event void SerialControl.stopDone(error_t err) {}	
 
@@ -145,6 +154,7 @@ implementation {
     if (!sendBusy)
 	sendMessage();
   }
+  
 
   event void Send.sendDone(message_t* m, error_t err) {
     if (err != SUCCESS) {

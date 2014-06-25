@@ -111,6 +111,7 @@ implementation {
 	 		upTimeIdle += d;
  		}
  		radio_status = FALSE;
+/*
  		//only record the data after 10 minutes
  		if (call Timer.getNow() >= TIME_TH && status){
 			total_on += d;
@@ -126,6 +127,7 @@ implementation {
 				}
 			}
 		}
+*/
 
 	}
 	event void RadioControl.stopDone(error_t err) {}
@@ -148,11 +150,11 @@ implementation {
 			dcycleData = ((uint64_t)10000 * upTimeData) / totalTime;	   
 			dcycleIdle = ((uint64_t)10000 * upTimeIdle) / totalTime;
 			time = (uint16_t)(call Timer.getNow() / 1024);
-			atomic{
+			atomic
 				totalTime = 0;
 				upTimeData = 0;
 				upTimeIdle = 0;
-			}
+			
 			if(TOS_NODE_ID != SINK_ID)
 				call Debug.logEventDbg(NET_DC_REPORT, (uint16_t)dcycleData, time, (uint16_t)dcycleIdle);  
 		} 
