@@ -16,6 +16,7 @@ configuration TestNetworkLplAppC {}
 implementation {
   components TestNetworkLplC, MainC, LedsC, ActiveMessageC;
   components new TimerMilliC();
+  components new TimerMilliC() as DelayTimer;
   components OppC;
   components RandomC;
   components ActiveMessageAddressC;
@@ -24,6 +25,7 @@ implementation {
   TestNetworkLplC.RadioControl -> OppC;
   TestNetworkLplC.Leds -> LedsC;
   TestNetworkLplC.Timer -> TimerMilliC;
+  //TestNetworkLplC.myTimer -> DelayTimer;
   TestNetworkLplC.Send -> OppC.Send;
   TestNetworkLplC.Receive -> OppC.Receive;
   TestNetworkLplC.Packet -> OppC;  

@@ -56,7 +56,7 @@ implementation {
 	bool radio_status;
 	enum {
 		//0x2000 = 256s
-		ENERGY_LIMIT = 0x2000,
+		ENERGY_LIMIT = 0x4000,
 		//equals 10 minutes
 		TIME_TH = 614400L,
 	};
@@ -126,6 +126,7 @@ implementation {
 				}	
 			}
 		}
+		
 	}
 	
 	event void RadioControl.stopDone(error_t err) {	}

@@ -22,6 +22,7 @@ module TestNetworkLplC {
   uses interface Send;
   uses interface Leds;
   uses interface Timer<TMilli>;
+  //uses interface Timer<TMilli> as myTimer;
   uses interface Random;
   uses interface Packet;
   uses interface Receive;
@@ -50,10 +51,16 @@ implementation {
 #endif 
     counter = 0;
     sendBusy = FALSE;
-    time_offset = 100L*TOS_NODE_ID;
+
+    //call myTimer.startOneShot(2013L*TOS_NODE_ID);
 	//if( TOS_NODE_ID == SINK_ID ||TOS_NODE_ID % 2 == 0)
     	call RadioControl.start();
+    
   }
+  
+  /*event void myTimer.fired(){
+	call RadioControl.start();
+  }*/
   
   event void RadioControl.startDone(error_t err) {
     if (err != SUCCESS) {

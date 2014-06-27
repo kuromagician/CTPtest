@@ -41,7 +41,7 @@ implementation {
   TestNetworkLplC.DisseminationControl -> DisseminationC;
   TestNetworkLplC.Leds -> LedsC;
   TestNetworkLplC.Timer -> TimerMilliC;
-  TestNetworkLplC.myTimer -> DelayTimer;
+  //TestNetworkLplC.myTimer -> DelayTimer;
   TestNetworkLplC.DisseminationPeriod -> Object32C;
   TestNetworkLplC.Send -> CollectionSenderC;
   TestNetworkLplC.ReadSensor -> DemoSensorC;

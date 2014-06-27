@@ -115,6 +115,7 @@ implementation {
 	 		upTimeIdle += d;
  		}
  		radio_status = FALSE;
+		/*
  		//only record the data after 10 minutes
  		if (call Timer.getNow() >= TIME_TH && status){
 			total_on += d;
@@ -134,6 +135,7 @@ implementation {
 				}
 			}
 		}
+		*/
 
 	}
 	event void RadioControl.stopDone(error_t err) {}
